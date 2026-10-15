@@ -1,32 +1,39 @@
 
-#include <iostream>
-using namespace std;
+def prim(graph, start):
+    visited = {start}
+    mst = []
+    total = 0
 
-int main() {
-    int n, a[10][10], v[10] = {0}, cost = 0;
-    cin >> n;
+    while len(visited) < len(graph):
+        edge = min(
+            (w, u, v)
+            for u in visited
+            for v, w in graph[u].items()
+            if v not in visited
+        )
+        w, u, v = edge
+        mst.append((u, v, w))
+        total += w
+        visited.add(v)
 
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            cin >> a[i][j];
+    print("Edges in MST:", mst)
+    print("Total Cost:", total)
 
-    v[0] = 1;
 
-    for (int e = 0; e < n - 1; e++) {
-        int min = 999, x = -1, y = -1;
+n = int(input("Enter number of vertices: "))
+graph = {}
 
-        for (int i = 0; i < n; i++)
-            if (v[i])
-                for (int j = 0; j < n; j++)
-                    if (!v[j] && a[i][j] && a[i][j] < min)
-                        min = a[i][j], x = i, y = j;
+for i in range(n):
+    vertex = input("Enter vertex name: ")
+    graph[vertex] = {}
 
-        if (x == -1) return cout << "No MST", 0;
+m = int(input("Enter number of edges: "))
 
-        cout << x << "-" << y << " : " << min << endl;
-        v[y] = 1;
-        cost += min;
-    }
+for i in range(m):
+    u, v, w = input("Enter edge (u v weight): ").split()
+    w = int(w)
+    graph[u][v] = w
+    graph[v][u] = w
 
-    cout << "Minimum Cost = " << cost;
-}
+start = input("Enter starting vertex: ")
+prim(graph, start)
